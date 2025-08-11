@@ -1,0 +1,19 @@
+[project]
+name = "whisper-rag-chatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "freesimplegui>=5.2.0.post1",
+    "keyboard>=0.13.5",
+    "kittentts",
+    "ollama>=0.5.3",
+    "openai-whisper>=20250625",
+    "sounddevice>=0.5.2",
+    "soundfile>=0.13.1",
+]
+
+[tool.uv.sources]
+kittentts = { git = "https://github.com/KittenML/KittenTTS.git" }
