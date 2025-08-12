@@ -36,7 +36,7 @@ ASSETS_DIR = "assets"
 SEND_IMG  = os.path.join(ASSETS_DIR, "send.png")
 REC_IMG   = os.path.join(ASSETS_DIR, "record.png")
 STOP_IMG  = os.path.join(ASSETS_DIR, "stop.png")
-HEADER_IMG = os.path.join(ASSETS_DIR, "Green-Sea-Turtle-Banner.png")
+HEADER_IMG = os.path.join(ASSETS_DIR, "Sea-Turtle-Banner.png")
 # -------------------------
 
 
@@ -287,6 +287,8 @@ def ollama_chat(model: str, messages: List[Dict[str, str]]) -> str:
     msg = getattr(getattr(resp, "message", {}), "content", None)
     if msg is None:
         msg = resp.get("message", {}).get("content", "")
+    else:
+        msg = shorten_text_by_sentence(msg)
     return msg or ""
 
 def transcribe_audio(audio: np.ndarray) -> str:
@@ -295,6 +297,38 @@ def transcribe_audio(audio: np.ndarray) -> str:
     result = whisper_model.transcribe(audio.flatten(), language="en", fp16=False)
     text = result.get("text", "").strip()
     return text
+
+def shorten_text_by_sentence(text: str) -> str:
+    """
+    Shortens a string of text to 50 words or less by removing full sentences
+    from the end.
+
+    Args:
+        text: The input string of text.
+
+    Returns:
+        The shortened string of text, or the original string if it is already
+        50 words or less.
+    """
+    # Use a regular expression to split the text into sentences.
+    # The lookbehind `(?<=[.!?])` ensures the punctuation is kept with the sentence.
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+
+    # Calculate the initial word count of the full text.
+    word_count = len(text.split())
+
+    # Loop while the word count is more than 50 and there's more than one sentence.
+    while word_count > 50 and len(sentences) > 1:
+        # Remove the last sentence.
+        sentences.pop()
+        
+        # Join the remaining sentences and recalculate the word count.
+        shortened_text = ' '.join(sentences)
+        word_count = len(shortened_text.split())
+        
+    # Return the final shortened text.
+    # The strip() is used to remove any trailing whitespace.
+    return ' '.join(sentences).strip()
 
 def speak(text: str, voice: str = DEFAULT_VOICE):
     try:

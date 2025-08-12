@@ -1040,3 +1040,14 @@ Answer: The hawksbill's slender, pointed beak enables it to reach into the small
 Question: Are tourists permitted to observe sea turtles laying eggs in Malaysia?
 Answer: Yes, visitors can witness sea turtles laying eggs in specific locations like Rantau Abang and the Turtle Islands Park, provided they adhere to strict regulations to prevent any disturbance to the turtles.
 
+Question: Where can we find sea turtles?
+Answer: Sea turtles can be found in most of the world's oceans, with the exception of the cold polar seas. While they spend the majority of their lives in the water, specifically in relatively shallow continental shelf waters.
+
+Question: Could you tell me the habitat of sea turtles?
+Answer: Sea turtles inhabit the tropical and subtropical waters of the Atlantic, Pacific, and Indian Oceans. 
+
+Question: Where can we find sea turtles in Penang?
+Answer: Pantai Kerachut located within Penang National Park, which is a nesting site for both green and olive ridley turtles.
+
+Question: Where can we find sea turtles in Malaysia?
+Answer: In Malaysia, you can find sea turtles along the coastlines of several states, particularly on the east coast of Peninsular Malaysia and in the states of Sabah and Sarawak, with major nesting sites and conservation projects located at places like Turtle Islands Park, Tioman Island, and Cherating.
