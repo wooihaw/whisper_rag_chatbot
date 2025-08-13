@@ -539,10 +539,10 @@ def build_main_window() -> sg.Window:
 
     chat_col = [
         [header_widget],
-        [sg.Multiline("", size=(80, 24), key="-CHAT-", autoscroll=True, disabled=True, expand_x=True, expand_y=True,
+        [sg.Multiline("", size=(80, 12), key="-CHAT-", autoscroll=True, disabled=True, expand_x=True, expand_y=True,
                       background_color=THEME_BG, text_color=THEME_FG, font=(CHAT_FONT_FAMILY, CHAT_FONT_SIZE))],
         [sg.Input("", key="-INPUT-", expand_x=True, focus=True, font=(CHAT_FONT_FAMILY, CHAT_FONT_SIZE)), send_btn, rec_btn],
-        [sg.Multiline("", size=(80, 6), key="-SOURCES-", disabled=True, expand_x=True, expand_y=False,
+        [sg.Multiline("", size=(80, 3), key="-SOURCES-", disabled=True, expand_x=True, expand_y=False,
                       background_color=THEME_BG_2, text_color=THEME_FG_2, visible=False)],
         [sg.StatusBar("Ready.", key="-STATUS-", text_color=THEME_FG, background_color=THEME_BG)]
     ]
