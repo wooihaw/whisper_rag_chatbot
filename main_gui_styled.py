@@ -33,16 +33,16 @@ THEME_FG_2 = '#e5e7eb'
 # --- UI polish (added) ---
 # Paths to optional UI assets. If files are absent, the GUI falls back to text buttons.
 ASSETS_DIR = "assets"
-SEND_IMG  = os.path.join(ASSETS_DIR, "send.png")
-REC_IMG   = os.path.join(ASSETS_DIR, "record.png")
-STOP_IMG  = os.path.join(ASSETS_DIR, "stop.png")
+SEND_IMG  = os.path.join(ASSETS_DIR, "send_02.png")
+REC_IMG   = os.path.join(ASSETS_DIR, "record_02.png")
+STOP_IMG  = os.path.join(ASSETS_DIR, "stop_02.png")
 HEADER_IMG = os.path.join(ASSETS_DIR, "Sea-Turtle-Banner.png")
 # -------------------------
 
 
 # Chat font configuration
 CHAT_FONT_FAMILY = 'Segoe UI Emoji'  # Choose an emoji-capable font (Windows: Segoe UI Emoji; Linux: Noto Color Emoji)
-CHAT_FONT_SIZE = 16                  # Increase for larger chat text
+CHAT_FONT_SIZE = 20                  # Increase for larger chat text
 
 SAMPLE_RATE = 16000
 DEFAULT_LLM = "sea_turtle_llama3_2_3b_q4_k_m_v5"
@@ -513,7 +513,7 @@ def build_main_window() -> sg.Window:
     
     # --- UI polish (added): Use image buttons if assets are present, and add optional banner header ---
     use_icons = all(os.path.isfile(p) for p in (SEND_IMG, REC_IMG, STOP_IMG))
-    header_widget = sg.Image(HEADER_IMG, pad=(0, 6)) if os.path.isfile(HEADER_IMG) else sg.Text("Sea Turtle Tutor", font=("Segoe UI", 18, "bold"))
+    header_widget = sg.Image(HEADER_IMG, pad=(0, 6), expand_x=True, expand_y=True) if os.path.isfile(HEADER_IMG) else sg.Text("Sea Turtle Tutor", font=("Segoe UI", 18, "bold"))
 
     if use_icons:
         send_btn = sg.Button(
@@ -539,10 +539,10 @@ def build_main_window() -> sg.Window:
 
     chat_col = [
         [header_widget],
-        [sg.Multiline("", size=(90, 24), key="-CHAT-", autoscroll=True, disabled=True, expand_x=True, expand_y=True,
+        [sg.Multiline("", size=(80, 24), key="-CHAT-", autoscroll=True, disabled=True, expand_x=True, expand_y=True,
                       background_color=THEME_BG, text_color=THEME_FG, font=(CHAT_FONT_FAMILY, CHAT_FONT_SIZE))],
-        [sg.Input("", key="-INPUT-", expand_x=True, focus=True), send_btn, rec_btn],
-        [sg.Multiline("", size=(90, 6), key="-SOURCES-", disabled=True, expand_x=True, expand_y=False,
+        [sg.Input("", key="-INPUT-", expand_x=True, focus=True, font=(CHAT_FONT_FAMILY, CHAT_FONT_SIZE)), send_btn, rec_btn],
+        [sg.Multiline("", size=(80, 6), key="-SOURCES-", disabled=True, expand_x=True, expand_y=False,
                       background_color=THEME_BG_2, text_color=THEME_FG_2, visible=False)],
         [sg.StatusBar("Ready.", key="-STATUS-", text_color=THEME_FG, background_color=THEME_BG)]
     ]
@@ -749,13 +749,22 @@ def main():
                     window["-INPUT-"].update(text)
                     window.write_event_value("-SEND-", None)  # (added) auto-send transcribed text
                 status.update("Ready.")
+            elif not recorder.recording:
+                try:
+                    recorder.start()
+                    window['-SEND-'].update(disabled=True)
+                    window["-REC-"].update(image_filename=STOP_IMG) if window.metadata.get("use_icons") else window["-REC-"].update("Stop", button_color=("white", "firebrick3"))  # (added) image toggle
+                    status.update("Recording… Press Stop or Esc.")
+                except Exception as e:
+                    sg.popup("Cannot start recording", f"{e}", keep_on_top=True)
+                    status.update("Ready.")
 
         elif event == "-SEND-":
             user_text = values["-INPUT-"].strip()
             if not user_text:
                 continue
 
-            append_chat("🧑", user_text)
+            append_chat("🧑", user_text + '\n')
             window["-INPUT-"].update("")
             sources.update("")
             status.update("Thinking…")
@@ -772,7 +781,7 @@ def main():
             except Exception as e:
                 reply = f"(LLM error: {e})"
 
-            append_chat("🤖", reply)
+            append_chat("🤖", reply + '\n')
             window.refresh()
 
             if cites and state.show_sources:
